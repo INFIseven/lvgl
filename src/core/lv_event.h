@@ -75,7 +75,6 @@ typedef enum {
     LV_EVENT_CHILD_CHANGED,       /**< Child was removed, added, or its size, position were changed */
     LV_EVENT_CHILD_CREATED,       /**< Child was created, always bubbles up to all parents*/
     LV_EVENT_CHILD_DELETED,       /**< Child was deleted, always bubbles up to all parents*/
-    LV_EVENT_GET_COMP_CHILD,      /**< Get the child component NOTE: CUSTOM */
     LV_EVENT_SCREEN_UNLOAD_START, /**< A screen unload started, fired immediately when scr_load is called*/
     LV_EVENT_SCREEN_LOAD_START,   /**< A screen load started, fired when the screen change delay is expired*/
     LV_EVENT_SCREEN_LOADED,       /**< A screen was loaded*/
