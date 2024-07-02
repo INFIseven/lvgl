@@ -23,6 +23,7 @@ extern "C" {
 #include "rlottie/lv_rlottie.h"
 #include "ffmpeg/lv_ffmpeg.h"
 #include "rle/lv_rle.h"
+#include "ext_img_nfs/lv_ext_img_nfs.h"
 
 /*********************
  *      DEFINES
