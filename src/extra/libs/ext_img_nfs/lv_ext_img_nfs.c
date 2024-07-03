@@ -7,7 +7,6 @@
  *      INCLUDES
  *********************/
 #include "../../../lvgl.h"
-#define LV_USE_EXT_IMG_NFS 1
 
 #if LV_USE_EXT_IMG_NFS
 #include "lv_ext_img_nfs.h"

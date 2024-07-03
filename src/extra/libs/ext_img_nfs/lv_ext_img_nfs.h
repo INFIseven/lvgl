@@ -6,7 +6,6 @@
 #ifndef LV_EXT_IMG_NFS_H
 #define LV_EXT_IMG_NFS_H
 
-#define LV_USE_EXT_IMG_NFS 1
 #ifdef __cplusplus
 extern "C" {
 #endif
