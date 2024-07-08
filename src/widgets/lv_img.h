@@ -93,7 +93,7 @@ lv_obj_t * lv_img_create(lv_obj_t * parent);
  *                  2) path to an image file (e.g. "S:/dir/img.bin")or
  *                  3) a SYMBOL (e.g. LV_SYMBOL_OK)
  */
-void lv_img_set_src(lv_obj_t * obj, const void * src);
+lv_res_t lv_img_set_src(lv_obj_t * obj, const void * src);
 
 /**
  * Set an offset for the source of an image so the image will be displayed from the new origin.

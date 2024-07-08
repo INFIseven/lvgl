@@ -9,11 +9,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#define LV_USE_EXT_IMG_NFS 1
 /*********************
  *      INCLUDES
  *********************/
-// #include "../../../lv_conf_internal.h"
+#include "../../../lv_conf_internal.h"
 #if LV_USE_EXT_IMG_NFS
 
 /*********************
@@ -26,10 +26,9 @@ extern "C" {
  **********************/
 typedef struct
 {
-    uint32_t cf : 5;          /*Color format: See `lv_img_color_format_t`*/
-    uint32_t always_zero : 3; /*It the upper bits of the first byte. Always zero to look like a
-                             non-printable character*/
-    uint32_t flash_addr;
+    lv_img_header_t header; /**< A header describing the basics of the image*/
+    uint32_t data_size;     /**< Size of the image in bytes*/
+    const uint8_t * data;   /**< Pointer to the data of the image*/
 } lv_ext_img_nfs_t;
 
 /**********************

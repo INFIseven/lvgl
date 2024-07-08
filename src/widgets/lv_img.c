@@ -67,7 +67,7 @@ lv_obj_t * lv_img_create(lv_obj_t * parent)
  * Setter functions
  *====================*/
 
-void lv_img_set_src(lv_obj_t * obj, const void * src)
+lv_res_t lv_img_set_src(lv_obj_t * obj, const void * src)
 {
     LV_ASSERT_OBJ(obj, MY_CLASS);
 
@@ -100,12 +100,15 @@ void lv_img_set_src(lv_obj_t * obj, const void * src)
         }
         img->src      = NULL;
         img->src_type = LV_IMG_SRC_UNKNOWN;
-        return;
+        return LV_RES_INV;
     }
 
     lv_img_header_t header;
-    lv_img_decoder_get_info(src, &header);
-
+    lv_res_t ret = lv_img_decoder_get_info(src, &header);
+    if (ret != LV_RES_OK) {
+        //LV_LOG_WARN("lv_img_set_src: failed to get image info");
+        return LV_RES_INV;
+    }
     /*Save the source*/
     if(src_type == LV_IMG_SRC_VARIABLE) {
         /*If memory was allocated because of the previous `src_type` then free it*/
@@ -126,7 +129,7 @@ void lv_img_set_src(lv_obj_t * obj, const void * src)
             }
             char * new_str = lv_mem_alloc(strlen(src) + 1);
             LV_ASSERT_MALLOC(new_str);
-            if(new_str == NULL) return;
+            if(new_str == NULL) return LV_RES_INV;
             strcpy(new_str, src);
             img->src = new_str;
 
@@ -158,6 +161,7 @@ void lv_img_set_src(lv_obj_t * obj, const void * src)
     if(img->angle || img->zoom != LV_IMG_ZOOM_NONE) lv_obj_refresh_ext_draw_size(obj);
 
     lv_obj_invalidate(obj);
+    return LV_RES_OK;
 }
 
 void lv_img_set_offset_x(lv_obj_t * obj, lv_coord_t x)
