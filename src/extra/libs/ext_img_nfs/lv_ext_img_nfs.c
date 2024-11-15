@@ -26,14 +26,11 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
+extern const uint8_t test_image[];
+
 static lv_res_t decoder_info(lv_img_decoder_t *decoder, const void *src, lv_img_header_t *header);
 static lv_res_t decoder_open(lv_img_decoder_t *dec, lv_img_decoder_dsc_t *dsc);
-static lv_res_t decoder_read_line(lv_img_decoder_t     *decoder,
-                  lv_img_decoder_dsc_t *dsc,
-                  lv_coord_t            x,
-                  lv_coord_t            y,
-                  lv_coord_t            len,
-                  uint8_t              *buf);
+static lv_res_t decoder_read_line(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *dsc, lv_coord_t x, lv_coord_t y, lv_coord_t len, uint8_t *buf);
 static void     decoder_close(lv_img_decoder_t *dec, lv_img_decoder_dsc_t *dsc);
 
 /**********************
@@ -82,28 +79,23 @@ decoder_info(lv_img_decoder_t *decoder, const void *src, lv_img_header_t *header
     LV_UNUSED(decoder);
 
     lv_ext_img_nfs_t *img_header = (lv_ext_img_nfs_t *)src; /* Parse "LCD Image Converter" header */
-    //printf("img_header->cf: %d %d %d\n", img_header->cf, LV_IMG_CF_USER_ENCODED_1, LV_IMG_CF_EXT_IMG_NFS);
+    // printf("img_header->cf: %d %d %d\n", img_header->cf, LV_IMG_CF_USER_ENCODED_1, LV_IMG_CF_EXT_IMG_NFS);
     if (img_header->header.cf != LV_IMG_CF_EXT_IMG_NFS)
     {
         return LV_RES_INV;
     }
-    uint32_t address = *(uint32_t*)img_header->data;
+    uint32_t address = *(uint32_t *)img_header->data;
 #ifndef DEVICE_SIMULATOR
     ext_flash_read(address, (uint8_t *)header, sizeof(lv_img_header_t));
 #else
-    memcpy(header, &data_test[0], sizeof(lv_img_header_t));
+    memcpy(header, &test_image[0], sizeof(lv_img_header_t));
 #endif
     header->cf = LV_IMG_CF_EXT_IMG_NFS;
     // printf("header->cf: %d\n", header->cf);
     // printf("header->w: %d\n", header->w);
     // printf("header->h: %d\n", header->h);
     // printf("header->always_zero: %d\n", header->always_zero);
-    if ((header->cf == LV_IMG_CF_EXT_IMG_NFS) && 
-        (header->w != 0) && 
-        (header->h != 0) && 
-        (header->always_zero == 0) &&
-        (header->w != 0x7ff) && 
-        (header->h != 0x7ff))
+    if ((header->cf == LV_IMG_CF_EXT_IMG_NFS) && (header->w != 0) && (header->h != 0) && (header->always_zero == 0) && (header->w != 0x7ff) && (header->h != 0x7ff))
     {
         img_header->header.w = header->w;
         img_header->header.h = header->h;
@@ -123,31 +115,25 @@ static lv_res_t
 decoder_open(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *dsc)
 {
     LV_UNUSED(decoder);
-    //LV_UNUSED(dsc);
-    
+    // LV_UNUSED(dsc);
+
     lv_ext_img_nfs_t *img_header = (lv_ext_img_nfs_t *)dsc->src;
 
     return LV_RES_OK;
 }
 
 static lv_res_t
-decoder_read_line(lv_img_decoder_t     *decoder,
-                  lv_img_decoder_dsc_t *dsc,
-                  lv_coord_t            x,
-                  lv_coord_t            y,
-                  lv_coord_t            len,
-                  uint8_t              *buf)
+decoder_read_line(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *dsc, lv_coord_t x, lv_coord_t y, lv_coord_t len, uint8_t *buf)
 {
     LV_UNUSED(decoder);
-#ifndef DEVICE_SIMULATOR
     lv_ext_img_nfs_t *img_header = (lv_ext_img_nfs_t *)dsc->src;
-    uint32_t offset = 4 + (((y*img_header->header.w)+x) * 2);
-    uint32_t address = *(uint32_t*)img_header->data;
-    ext_flash_read(address + offset, (uint8_t *)buf, len*2);
+#ifndef DEVICE_SIMULATOR
+    uint32_t offset  = 4 + (((y * img_header->header.w) + x) * 2);
+    uint32_t address = *(uint32_t *)img_header->data;
+    ext_flash_read(address + offset, (uint8_t *)buf, len * 2);
 #else
-     memcpy(buf, &data_test[4 + (((y*img_header->header.w)+x) * 2)], len*2);
+    memcpy(buf, &test_image[4 + (((y * img_header->header.w) + x) * 2)], len * 2);
 #endif
-   
 
     return LV_RES_OK;
 }
